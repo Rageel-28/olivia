@@ -1,0 +1,64 @@
+<?php
+
+namespace App\Filament\Developer\Resources\Misis;
+
+use App\Filament\Developer\Resources\Misis\Pages\CreateMisi;
+use App\Filament\Developer\Resources\Misis\Pages\EditMisi;
+use App\Filament\Developer\Resources\Misis\Pages\ListMisis;
+use App\Filament\Developer\Resources\Misis\Schemas\MisiForm;
+use App\Filament\Developer\Resources\Misis\Tables\MisisTable;
+use App\Models\Misi;
+use BackedEnum;
+use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Table;
+
+class MisiResource extends Resource
+{
+    protected static ?string $model = Misi::class;
+
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-square-3-stack-3d';
+    protected static ?string $navigationLabel = 'My Apps';
+    protected static string|\UnitEnum|null $navigationGroup = 'MAIN';
+    protected static ?int $navigationSort = 2;
+
+    protected static ?string $modelLabel = 'Misi';
+    protected static ?string $pluralModelLabel = 'Misi';
+
+    protected static ?string $recordTitleAttribute = 'nama_aplikasi';
+
+    public static function form(Schema $schema): Schema
+    {
+        return MisiForm::configure($schema);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return MisisTable::configure($table);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    public static function getNavigationItemActiveRoutePattern(): string | array
+    {
+        return request()->routeIs(static::getRouteBaseName() . '.create')
+            ? 'dummy-route-never-matches'
+            : static::getRouteBaseName() . '.*';
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => ListMisis::route('/'),
+            'create' => CreateMisi::route('/create'),
+            'edit' => EditMisi::route('/{record}/edit'),
+            'kelola-tester' => Pages\KelolaTester::route('/{record}/kelola-tester'),
+        ];
+    }
+}
